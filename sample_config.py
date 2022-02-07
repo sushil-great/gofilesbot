@@ -19,6 +19,8 @@ logging.basicConfig(
 )
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
+
+
 class Config(object):
 
     # Get a bot token from botfather
@@ -34,11 +36,10 @@ class Config(object):
     TG_USER_SESSION = os.environ.get("TG_USER_SESSION", "")
 
     # ID of Channels from which the bot should search files
-    CHANNELS = set(int(x) for x in os.environ.get("CHANNELS", "").split())
+    CHANNELS = {int(x) for x in os.environ.get("CHANNELS", "").split()}
 
     # Authorized users to perform delete messages in group
-    AUTH_USERS = set(int(x) for x in os.environ.get("AUTH_USERS", "").split())
-
+    AUTH_USERS = {int(x) for x in os.environ.get("AUTH_USERS", "").split()}
 # ------------------------------------------ Optional Variables ------------------------------------------------------ #
     # Username of the group to tag in sending medias
     GROUP_U_NAME = os.environ.get("GROUP_U_NAME", "@MovieKeralam")
