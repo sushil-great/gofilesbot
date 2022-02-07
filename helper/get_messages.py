@@ -8,11 +8,13 @@ async def get_messages(client: Bot, chat_id: int, min_message_id: int, max_messa
     messages_to_delete = []
     async for msg in client.iter_history(chat_id=chat_id, limit=None):
         if min_message_id <= msg.message_id <= max_message_id:
-            if len(filter_type_s) > 0:
-                for filter_type in filter_type_s:
-                    obj = getattr(msg, filter_type)
-                    if obj:
-                        messages_to_delete.append(msg.message_id)
+            if filter_type_s:
+                messages_to_delete.extend(
+                    msg.message_id
+                    for filter_type in filter_type_s
+                    if (obj := getattr(msg, filter_type))
+                )
+
             else:
                 messages_to_delete.append(msg.message_id)
         # append to the list, based on the condition
@@ -24,7 +26,7 @@ async def get_messages(client: Bot, chat_id: int, min_message_id: int, max_messa
             )
             messages_to_delete = []
     # i don't know if there's a better way to delete messages
-    if len(messages_to_delete) > 0:
+    if messages_to_delete:
         await mass_delete_messages(
             client,
             chat_id,
